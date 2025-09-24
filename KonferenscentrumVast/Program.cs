@@ -9,6 +9,9 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddApplicationInsightsTelemetry();
+
+builder.Logging.AddApplicationInsights();
 
 // Controllers + JSON (optional: guard against reference loops if any entity slips through)
 builder.Services.AddControllers();
