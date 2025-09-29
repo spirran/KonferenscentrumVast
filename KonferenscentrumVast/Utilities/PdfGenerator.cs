@@ -3,11 +3,11 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-public class ContractDoucument : IDocument
+public class PdfContractGenerator : IDocument
 {
     private readonly BookingContract _contract;
 
-    public ContractDoucument(BookingContract contract)
+    public PdfContractGenerator(BookingContract contract)
     {
         _contract = contract;
     }
