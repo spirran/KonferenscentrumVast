@@ -6,6 +6,7 @@ using KonferenscentrumVast.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Azure.Storage.Blobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,13 @@ builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<FacilityService>();
 builder.Services.AddScoped<BookingContractService>();
 builder.Services.AddScoped<CustomerService>();
+builder.Services.AddSingleton(sp =>
+    {
+        var connectionString = builder.Configuration["AzureStorage:ConnectionString"];
+        var containerName = "bookingcontracts";
+        return new BlobContainerClient(connectionString, containerName);
+
+    });
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

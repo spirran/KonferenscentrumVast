@@ -49,8 +49,10 @@ public class PdfContractGenerator : IDocument
                     if (!string.IsNullOrWhiteSpace(_contract.CancelReason))
                         column.Item().Text($"Cancel Reason: {_contract.CancelReason}");
                     if (!string.IsNullOrWhiteSpace(_contract.Terms))
-                            column.Item().Text($"Terms:\n{_contract.Terms}");
+                        column.Item().Text($"Terms:\n{_contract.Terms}");
                 });
+                
+                
         });
     }
 }
