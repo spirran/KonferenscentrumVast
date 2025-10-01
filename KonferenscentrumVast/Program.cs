@@ -45,7 +45,7 @@ builder.Services.AddScoped<BookingContractService>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddSingleton(sp =>
     {
-        var connectionString = builder.Configuration.GetConnectionString("StorageAccount");
+        var connectionString = builder.Configuration["StorageAccount--ConnectionString"];
         var containerName = "bookingcontracts";
         return new BlobContainerClient(connectionString, containerName);
 
