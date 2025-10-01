@@ -97,7 +97,7 @@ namespace KonferenscentrumVast.Services
 
         public async Task UploadPdfContractAsync(BookingContract contract)
         {
-            IDocument document = new PdfContractGenerator(contract);
+            var document = new PdfContractGenerator(contract);
             byte[] pdfBytes = document.GeneratePdf();
 
             var blobClient = _blobContainer.GetBlobClient($"Contract-{contract.ContractNumber}.pdf");
