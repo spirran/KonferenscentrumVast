@@ -13,6 +13,9 @@ builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Logging.AddApplicationInsights();
 
+builder.Services.Configure<Smtpdata>(builder.Configuration.GetSection("Smtp"));
+builder.Services.AddSingleton<EmailNotifications>();
+
 // Controllers + JSON (optional: guard against reference loops if any entity slips through)
 builder.Services.AddControllers();
 

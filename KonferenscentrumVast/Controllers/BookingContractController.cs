@@ -19,12 +19,14 @@ namespace KonferenscentrumVast.Controllers
         private readonly BookingContractService _service;
         private readonly IBookingContractRepository _contracts;
         private readonly ILogger<BookingContractController> _logger;
+        private readonly EmailNotifications _email;
 
-        public BookingContractController(BookingContractService service, IBookingContractRepository contracts, ILogger<BookingContractController> logger)
+        public BookingContractController(BookingContractService service, IBookingContractRepository contracts, ILogger<BookingContractController> logger, EmailNotifications email)
         {
             _service = service;
             _logger = logger;
             _contracts = contracts;
+            _email = email;
         }
 
         /// <summary>
@@ -80,6 +82,15 @@ namespace KonferenscentrumVast.Controllers
         public async Task<ActionResult<BookingContractResponseDto>> CreateContract(int bookingId, [FromBody] BookingContractCreateDto dto)
         {
             var entity = await _service.CreateBasicForBookingAsync(bookingId, dto.Terms, dto.PaymentDueDate);
+
+            if (!string.IsNullOrWhiteSpace(entity.CustomerEmail))
+            {
+                await _email.SendAsync(
+                    to: entity.CustomerEmail,
+                    subject: "Bokningsbekräftelse",
+                    body: $"Hej {entity.CustomerName}\n\nDin bokning är registerad. Kontraktsnr: {entity.ContractNumber}");
+            }
+
             return CreatedAtAction(nameof(GetByBookingId), new { bookingId = entity.BookingId }, ToDto(entity));
         }
 
@@ -142,6 +153,15 @@ namespace KonferenscentrumVast.Controllers
         public async Task<ActionResult<BookingContractResponseDto>> Cancel(int id, [FromBody] string? reason)
         {
             var entity = await _service.CancelAsync(id, reason);
+
+            if (!string.IsNullOrWhiteSpace(entity.CustomerEmail))
+            {
+                await _email.SendAsync(
+                    to: entity.CustomerEmail,
+                    subject: "Avbokningsbekräftelse",
+                    body: $"Hej {entity.CustomerName}\n\nDin bokning med kontraktsnr: {entity.ContractNumber} är nu avbokad");
+            }
+
             return Ok(ToDto(entity));
         }
 
