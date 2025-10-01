@@ -7,12 +7,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Azure.Storage.Blobs;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Logging.AddApplicationInsights();
+
+var keyVaultName = builder.Configuration["KeyVaultName"];
+var keyVaultUri = new Uri($"https://{keyVaultName}.vault.azure.net/");
+builder.Configuration.AddAzureKeyVault(keyVaultUri, new DefaultAzureCredential());
 
 // Controllers + JSON (optional: guard against reference loops if any entity slips through)
 builder.Services.AddControllers();
@@ -45,10 +50,10 @@ builder.Services.AddScoped<BookingContractService>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddSingleton(sp =>
     {
-        var connectionString = builder.Configuration["StorageAccount--ConnectionString"];
+        var connectionString = builder.Configuration["StorageAccount:ConnectionString"];
         var containerName = "bookingcontracts";
-        return new BlobContainerClient(connectionString, containerName);
 
+        return new BlobContainerClient(connectionString, containerName);
     });
 
 // Database
