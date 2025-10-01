@@ -45,7 +45,7 @@ builder.Services.AddScoped<BookingContractService>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddSingleton(sp =>
     {
-        var connectionString = builder.Configuration["AzureStorage:ConnectionString"];
+        var connectionString = builder.Configuration.GetConnectionString("StorageAccount");
         var containerName = "bookingcontracts";
         return new BlobContainerClient(connectionString, containerName);
 
