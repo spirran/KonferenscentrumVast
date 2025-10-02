@@ -18,6 +18,7 @@ namespace KonferenscentrumVast.Controllers
         private readonly BookingService _bookingService;
         private readonly IBookingRepository _bookings;
         private readonly ILogger<BookingController> _logger;
+        private readonly EmailNotifications _email;
 
         public BookingController(
             BookingService bookingService,
@@ -105,6 +106,24 @@ namespace KonferenscentrumVast.Controllers
                 request.NumberOfParticipants,
                 request.Notes);
 
+
+            var email = booking.Customer?.Email;
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                try
+                {
+                    await _email.SendAsync(
+                        to: email,
+                        subject: "Bokningsbekräftelse",
+                        body: $"Hej {booking.Customer?.FirstName}!\n\n" +
+                              $"Din bokning ({booking.Id}) är registrerad: {booking.StartDate:d}–{booking.EndDate:d}.");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Misslyckades skicka bokningsmail för BookingId={Id}", booking.Id);
+                }
+            }
+
             return CreatedAtAction(nameof(GetById), new { id = booking.Id }, ToDto(booking));
         }
 
@@ -120,6 +139,21 @@ namespace KonferenscentrumVast.Controllers
         public async Task<ActionResult<BookingResponseDto>> Confirm(int id)
         {
             var updated = await _bookingService.ConfirmBookingAsync(id);
+
+            var email = updated.Customer?.Email;
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                try
+                {
+                    await _email.SendAsync(email, "Bokning bekräftad",
+                        $"Hej {updated.Customer?.FirstName}!\n\nDin bokning ({updated.Id}) är nu bekräftad.");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Misslyckades skicka confirm-mail för BookingId={Id}", id);
+                }
+            }
+
             return Ok(ToDto(updated));
         }
 
@@ -152,6 +186,21 @@ namespace KonferenscentrumVast.Controllers
         public async Task<IActionResult> Cancel(int id, [FromBody] BookingCancelDto? request)
         {
             await _bookingService.CancelBookingAsync(id, request?.Reason);
+
+            var b = await _bookings.GetByIdAsync(id);
+            var email = b?.Customer?.Email;
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                try
+                {
+                    await _email.SendAsync(email, "Avbokningsbekräftelse",
+                        $"Hej {b?.Customer?.FirstName}!\n\nDin bokning ({id}) är avbokad. Orsak: {request?.Reason}");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Misslyckades skicka cancel-mail för BookingId={Id}", id);
+                }
+            }
             return NoContent();
         }
 
