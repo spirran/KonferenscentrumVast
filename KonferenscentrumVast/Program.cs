@@ -15,9 +15,14 @@ builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Logging.AddApplicationInsights();
 
+
+builder.Services.Configure<Smtpdata>(builder.Configuration.GetSection("Smtp"));
+builder.Services.AddSingleton<EmailNotifications>();
+
 var keyVaultName = builder.Configuration["KeyVaultName"];
 var keyVaultUri = new Uri($"https://{keyVaultName}.vault.azure.net/");
 builder.Configuration.AddAzureKeyVault(keyVaultUri, new DefaultAzureCredential());
+
 
 // Controllers + JSON (optional: guard against reference loops if any entity slips through)
 builder.Services.AddControllers();
