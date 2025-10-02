@@ -3,6 +3,9 @@ using KonferenscentrumVast.Exceptions;
 using KonferenscentrumVast.Models;
 using KonferenscentrumVast.Repository.Interfaces;
 using KonferenscentrumVast.Validation;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
+using Azure.Storage.Blobs;
 
 namespace KonferenscentrumVast.Services
 {
@@ -17,14 +20,17 @@ namespace KonferenscentrumVast.Services
         private readonly IFacilityRepository _facilities;
         private readonly ILogger<BookingService> _logger;
         private readonly BookingContractService _contractService;
+        private readonly BlobContainerClient _blobContainer;
 
-        public BookingService(IBookingRepository bookings, ICustomerRepository customers, IFacilityRepository facilities, ILogger<BookingService> logger, BookingContractService contractService)
+        public BookingService(IBookingRepository bookings, ICustomerRepository customers, IFacilityRepository facilities, ILogger<BookingService> logger, BookingContractService contractService, BlobContainerClient blobContainer)
         {
             _bookings = bookings;
             _customers = customers;
             _facilities = facilities;
             _logger = logger;
             _contractService = contractService;
+            _blobContainer = blobContainer;
+
         }
 
         /// <summary>
@@ -80,12 +86,25 @@ namespace KonferenscentrumVast.Services
 
             booking = await _bookings.CreateAsync(booking);
 
-            await _contractService.CreateBasicForBookingAsync(booking.Id);
+            var contract = await _contractService.CreateBasicForBookingAsync(booking.Id);
+            await UploadPdfContractAsync(contract);
 
             _logger.LogInformation("Created booking {BookingId} for facility {FacilityId} and customer {CustomerId}.",
                 booking.Id, booking.FacilityId, booking.CustomerId);
 
             return booking;
+        }
+
+        public async Task UploadPdfContractAsync(BookingContract contract)
+        {
+            var document = new PdfContractGenerator(contract);
+            byte[] pdfBytes = document.GeneratePdf();
+
+            var blobClient = _blobContainer.GetBlobClient($"Contract-{contract.ContractNumber}.pdf");
+
+            using var stream = new MemoryStream(pdfBytes);
+            await blobClient.UploadAsync(stream, overwrite: true);
+
         }
 
         public async Task<Booking> ConfirmBookingAsync(int bookingId)
