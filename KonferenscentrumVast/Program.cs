@@ -8,8 +8,12 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Azure.Storage.Blobs;
 using Azure.Identity;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+QuestPDF.Settings.License = LicenseType.Community;
+
 
 builder.Services.AddApplicationInsightsTelemetry();
 
