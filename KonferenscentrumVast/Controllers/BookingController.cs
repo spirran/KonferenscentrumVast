@@ -23,11 +23,13 @@ namespace KonferenscentrumVast.Controllers
         public BookingController(
             BookingService bookingService,
             IBookingRepository bookings,
-            ILogger<BookingController> logger)
+            ILogger<BookingController> logger,
+            EmailNotifications email)
         {
             _bookingService = bookingService;
             _bookings = bookings;
             _logger = logger;
+            _email = email;
         }
 
         /// <summary>
@@ -105,7 +107,6 @@ namespace KonferenscentrumVast.Controllers
                 request.EndDate,
                 request.NumberOfParticipants,
                 request.Notes);
-
 
             var email = booking.Customer?.Email;
             if (!string.IsNullOrWhiteSpace(email))
