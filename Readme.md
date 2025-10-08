@@ -14,7 +14,6 @@ The project is built as a Controller Service Repository architecture with
 * QuestPDF
 * SMTP
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -32,6 +31,7 @@ The project is built as a Controller Service Repository architecture with
   dotnet tool install --global dotnet-ef
   dotnet add package Microsoft.EntityFrameworkCore.Design
   ```
+  
 ### Installation
 
 _Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
@@ -59,22 +59,18 @@ _Below is an example of how you can instruct your audience on installing and set
    git remote -v # confirm the changes
    ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- LICENSE -->
 ## License
 The project itself is not licensed however it is using the QuestPDF community license which stipulates "for commercial projects of individuals or businesses with less than 1 million USD annual gross revenue"
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 This readme was created using the template from: 
 https://github.com/othneildrew/Best-README-Template/tree/main
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
