@@ -2,16 +2,17 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-
+A group project for the Cloudbased Applications course for the .NET developer program at Teknikhögskolan Göteborg
+We received a ready made .NET project with the task of migrating it to Azure in order to learn how to move a project to the cloud
+as well as gaining familiarity with Azure
 
 
 ### Built With
-
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
-
-* [![React][React.js]][React-url]
+The project is built as a Controller Service Repository architecture with 
+* Entity Framework
+* AspNetCore
+* QuestPDF
+* SMTP
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -20,34 +21,38 @@ This section should list any major frameworks/libraries used to bootstrap your p
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
+* .NET 8.0 or later
   ```sh
-  npm install npm@latest -g
+  https://learn.microsoft.com/en-us/dotnet/core/install/
   ```
-
+* Entity Framework
+  ```sh
+  dotnet tool install --global dotnet-ef
+  dotnet add package Microsoft.EntityFrameworkCore.Design
+  ```
 ### Installation
 
 _Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
 
-1. 
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/github_username/repo_name.git
    ```
-3. Install NPM packages
+2. Install NPM packages
    ```sh
    npm install
    ```
-4. Enter your API in `config.js`
+3. In `appsettings.json` change to your own azure keyvault or default connection string
    ```js
-   const API_KEY = 'ENTER YOUR API';
+   "keyVaultName": "ENTER YOUR KEYVAULT NAME";
    ```
+4. Delete migrations and run
+   ```sh
+   dotnet ef database update
+   ```
+   to enable moving your database to a different provider, from Postgres to SQL Server for example
 5. Change git remote url to avoid accidental pushes to base project
    ```sh
    git remote set-url origin github_username/repo_name
@@ -57,48 +62,17 @@ _Below is an example of how you can instruct your audience on installing and set
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<!-- CONTRIBUTING -->
-
-### Contributors:
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
 <!-- LICENSE -->
 ## License
-
-Distributed under the Unlicense License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- CONTACT -->
-## Contact
-
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+The project itself is not licensed however it is using the QuestPDF community license which stipulates "for commercial projects of individuals or businesses with less than 1 million USD annual gross revenue"
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
-
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
+This readme was created using the template from: 
+https://github.com/othneildrew/Best-README-Template/tree/main
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
