@@ -34,7 +34,6 @@ public class PdfContractGenerator : IDocument
 
                     column.Item().Text($"Contract Number: {_contract.ContractNumber}");
                     column.Item().Text($"Version: {_contract.Version}");
-                    column.Item().Text($"Database ID: {_contract.Id}");
                     column.Item().Text($"Status: {_contract.Status}");
                     column.Item().Text($"Created: {_contract.CreatedDate:yyyy-MM-dd}");
                     column.Item().Text($"Customer: {_contract.CustomerName} ({_contract.CustomerEmail})");
