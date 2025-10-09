@@ -86,9 +86,6 @@ namespace KonferenscentrumVast.Services
 
             booking = await _bookings.CreateAsync(booking);
 
-            var contract = await _contractService.CreateBasicForBookingAsync(booking.Id);
-            await UploadPdfContractAsync(contract);
-
             _logger.LogInformation("Created booking {BookingId} for facility {FacilityId} and customer {CustomerId}.",
                 booking.Id, booking.FacilityId, booking.CustomerId);
 
@@ -123,6 +120,9 @@ namespace KonferenscentrumVast.Services
 
             var updated = await _bookings.UpdateAsync(booking.Id, booking)
                 ?? throw new NotFoundException($"Booking with id={booking.Id} was not found during update.");
+
+            var contract = await _contractService.CreateBasicForBookingAsync(updated.Id);
+            await UploadPdfContractAsync(contract);
 
             _logger.LogInformation("Confirmed booking {BookingId}.", updated.Id);
             return updated;
